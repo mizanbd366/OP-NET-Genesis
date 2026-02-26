@@ -44,11 +44,32 @@
         </div>
     </div>
     <script>
+        const connectBtn = document.querySelector('.connect-btn');
+        connectBtn.addEventListener('click', async () => {
+            if (typeof window.unisat !== 'undefined') {
+                try {
+                    connectBtn.innerText = 'Connecting...';
+                    const accounts = await window.unisat.requestAccounts();
+                    const address = accounts[0];
+                    connectBtn.innerText = address.substring(0, 4) + '...' + address.substring(address.length - 4);
+                    alert('Connected Successfully: ' + address);
+                } catch (e) {
+                    connectBtn.innerText = 'Connect Wallet';
+                    alert('Error: ' + e.message);
+                }
+            } else {
+                alert('Bitcoin Wallet not found! Please install Unisat or Xverse browser extension.');
+                window.open('https://unisat.io/download', '_blank');
+            }
+        });
+
         let count = 0;
         setInterval(() => {
             count += 0.00000125;
-            document.getElementById('reward').innerText = count.toFixed(8);
+            const rewardEl = document.getElementById('reward');
+            if(rewardEl) rewardEl.innerText = count.toFixed(8);
         }, 1200);
     </script>
 </body>
 </html>
+
